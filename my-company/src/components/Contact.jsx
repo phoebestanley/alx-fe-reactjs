@@ -1,11 +1,7 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -13,12 +9,13 @@ function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('Form submitted!');
+    alert(`Thank you, ${formData.name}! Your message has been sent.`);
+    setFormData({ name: "", email: "", message: "" }); // reset form
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Contact Us</h1>
+    <div>
+      <h2>Contact Us</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -26,24 +23,27 @@ function Contact() {
           placeholder="Your Name"
           value={formData.name}
           onChange={handleChange}
-          style={{ display: 'block', margin: '10px 0' }}
+          required
         />
+        <br />
         <input
           type="email"
           name="email"
           placeholder="Your Email"
           value={formData.email}
           onChange={handleChange}
-          style={{ display: 'block', margin: '10px 0' }}
+          required
         />
+        <br />
         <textarea
           name="message"
           placeholder="Your Message"
           value={formData.message}
           onChange={handleChange}
-          style={{ display: 'block', margin: '10px 0' }}
+          required
         />
-        <button type="submit">Send Message</button>
+        <br />
+        <button type="submit">Send</button>
       </form>
     </div>
   );
