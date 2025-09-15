@@ -4,21 +4,40 @@ export const useRecipeStore = create((set) => ({
   recipes: [],
   favorites: [],
   recommendations: [],
+  searchTerm: '',
+  filteredRecipes: [],
 
+  // ✅ Add recipe
   addRecipe: (newRecipe) =>
-    set((state) => ({ recipes: [...state.recipes, newRecipe] })),
+    set((state) => {
+      const updatedRecipes = [...state.recipes, newRecipe];
+      const filtered = updatedRecipes.filter((recipe) =>
+        recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
+      );
+      return { recipes: updatedRecipes, filteredRecipes: filtered };
+    }),
 
+  // ✅ Update recipe
   updateRecipe: (updatedRecipe) =>
-    set((state) => ({
-      recipes: state.recipes.map((recipe) =>
+    set((state) => {
+      const updatedRecipes = state.recipes.map((recipe) =>
         recipe.id === updatedRecipe.id ? updatedRecipe : recipe
-      ),
-    })),
+      );
+      const filtered = updatedRecipes.filter((recipe) =>
+        recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
+      );
+      return { recipes: updatedRecipes, filteredRecipes: filtered };
+    }),
 
+  // ✅ Delete recipe
   deleteRecipe: (id) =>
-    set((state) => ({
-      recipes: state.recipes.filter((recipe) => recipe.id !== id),
-    })),
+    set((state) => {
+      const updatedRecipes = state.recipes.filter((recipe) => recipe.id !== id);
+      const filtered = updatedRecipes.filter((recipe) =>
+        recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
+      );
+      return { recipes: updatedRecipes, filteredRecipes: filtered };
+    }),
 
   // ✅ Favorites
   addFavorite: (recipeId) =>
@@ -37,5 +56,14 @@ export const useRecipeStore = create((set) => ({
           state.favorites.includes(recipe.id) && Math.random() > 0.5
       );
       return { recommendations: recommended };
+    }),
+
+  // ✅ Search & Filter
+  setSearchTerm: (term) =>
+    set((state) => {
+      const filtered = state.recipes.filter((recipe) =>
+        recipe.title.toLowerCase().includes(term.toLowerCase())
+      );
+      return { searchTerm: term, filteredRecipes: filtered };
     }),
 }));
