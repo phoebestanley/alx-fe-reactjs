@@ -7,6 +7,15 @@ export const useRecipeStore = create((set) => ({
   searchTerm: '',
   filteredRecipes: [],
 
+  // ✅ Set all recipes at once
+  setRecipes: (recipes) =>
+    set((state) => {
+      const filtered = recipes.filter((recipe) =>
+        recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
+      );
+      return { recipes, filteredRecipes: filtered };
+    }),
+
   // ✅ Add recipe
   addRecipe: (newRecipe) =>
     set((state) => {
