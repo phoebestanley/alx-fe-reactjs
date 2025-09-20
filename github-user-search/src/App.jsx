@@ -1,26 +1,11 @@
-import { useState } from "react";
+import React from "react";
+import Search from "./components/Search";
 
 function App() {
-  const [query, setQuery] = useState("");
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log("Searching for:", query);
-    // later: call GitHub API
-  };
-
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1>GitHub User Search</h1>
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          placeholder="Enter GitHub username"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <button type="submit">Search</button>
-      </form>
+    <div>
+      <h1 style={{ textAlign: "center" }}>GitHub User Search</h1>
+      <Search />
     </div>
   );
 }
