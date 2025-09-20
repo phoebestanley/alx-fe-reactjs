@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { fetchUserData } from "../services/githubService";
 
 const Search = () => {
@@ -9,6 +9,8 @@ const Search = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!username) return;
+
     setLoading(true);
     setError("");
     setUser(null);
@@ -17,46 +19,24 @@ const Search = () => {
       const data = await fetchUserData(username);
       setUser(data);
     } catch (err) {
-      setError("Looks like we can’t find the user");
+      setError("Looks like we can't find the user.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "2rem" }}>
-      <form onSubmit={handleSubmit}>
+    <div className="max-w-xl mx-auto p-6">
+      <h1 className="text-2xl font-bold text-center mb-4">GitHub User Search</h1>
+
+      {/* Search Form */}
+      <form onSubmit={handleSubmit} className="flex space-x-2 mb-6">
         <input
           type="text"
-          placeholder="Enter GitHub username..."
+          placeholder="Enter GitHub username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          style={{ padding: "0.5rem", width: "250px" }}
+          className="flex-1 p-2 border rounded"
         />
-        <button type="submit" style={{ padding: "0.5rem", marginLeft: "8px" }}>
-          Search
-        </button>
-      </form>
-
-      {/* Conditional Rendering */}
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {user && (
-        <div style={{ marginTop: "2rem" }}>
-          <img
-            src={user.avatar_url}
-            alt={user.login}
-            width="100"
-            style={{ borderRadius: "50%" }}
-          />
-          <h2>{user.name || user.login}</h2>
-          <a href={user.html_url} target="_blank" rel="noopener noreferrer">
-            Visit GitHub Profile
-          </a>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default Search;
+        <button
+          type="submit"
