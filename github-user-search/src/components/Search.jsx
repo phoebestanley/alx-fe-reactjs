@@ -5,7 +5,7 @@ const Search = () => {
   const [username, setUsername] = useState("");
   const [location, setLocation] = useState("");
   const [minRepos, setMinRepos] = useState("");
-  const [users, setUsers] = useState([]);
+  const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -13,17 +13,17 @@ const Search = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    setUsers([]);
+    setResults([]);
 
     try {
-      const data = await searchUsers(username, location, minRepos);
-      if (data.length === 0) {
-        setError("Looks like we cant find the user");
+      const users = await searchUsers({ username, location, minRepos });
+      if (users.length === 0) {
+        setError("Looks like we can’t find any users matching your search.");
       } else {
-        setUsers(data);
+        setResults(users);
       }
-    } catch (err) {
-      setError("Looks like we cant find the user");
+    } catch {
+      setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -34,63 +34,66 @@ const Search = () => {
       {/* Search Form */}
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col md:flex-row gap-3 mb-6 w-full max-w-3xl"
+        className="flex flex-col md:flex-row gap-4 w-full max-w-4xl bg-white shadow-md rounded-lg p-6"
       >
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="GitHub username"
-          className="border px-4 py-2 rounded w-full"
+          className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="text"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           placeholder="Location"
-          className="border px-4 py-2 rounded w-full"
+          className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="number"
           value={minRepos}
           onChange={(e) => setMinRepos(e.target.value)}
           placeholder="Min Repos"
-          className="border px-4 py-2 rounded w-full"
+          className="border border-gray-300 rounded-lg px-4 py-2 w-full focus:ring-2 focus:ring-blue-500"
         />
         <button
           type="submit"
-          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition w-full md:w-auto"
         >
           Search
         </button>
       </form>
 
       {/* Results Section */}
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl">
-        {users.map((user) => (
-          <div
-            key={user.id}
-            className="border rounded-lg p-4 shadow hover:shadow-lg transition"
-          >
-            <img
-              src={user.avatar_url}
-              alt={user.login}
-              className="w-20 h-20 rounded-full mx-auto"
-            />
-            <h2 className="text-lg font-bold text-center mt-2">{user.login}</h2>
-            <a
-              href={user.html_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block text-center text-blue-500 underline mt-2"
-            >
-              View Profile
-            </a>
-          </div>
-        ))}
+      <div className="mt-8 w-full max-w-4xl">
+        {loading && <p className="text-gray-500">Loading...</p>}
+        {error && <p className="text-red-500">{error}</p>}
+        {results.length > 0 && (
+          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {results.map((user) => (
+              <li
+                key={user.id}
+                className="bg-white shadow rounded-lg p-4 flex flex-col items-center"
+              >
+                <img
+                  src={user.avatar_url}
+                  alt={user.login}
+                  className="w-20 h-20 rounded-full mb-3"
+                />
+                <h3 className="font-semibold">{user.login}</h3>
+                <a
+                  href={user.html_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-blue-600 hover:underline mt-2"
+                >
+                  View Profile
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
