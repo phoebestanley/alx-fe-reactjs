@@ -40,3 +40,39 @@ const Search = () => {
         />
         <button
           type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Search
+        </button>
+      </form>
+
+      {/* Conditional Rendering */}
+      {loading && <p className="text-center">Loading...</p>}
+      {error && <p className="text-center text-red-500">{error}</p>}
+
+      {user && (
+        <div className="p-4 border rounded shadow bg-white">
+          <img
+            src={user.avatar_url}
+            alt={user.login}
+            className="w-20 h-20 rounded-full mx-auto"
+          />
+          <h2 className="text-xl font-bold text-center mt-2">{user.name || user.login}</h2>
+          <p className="text-center text-gray-600">@{user.login}</p>
+          <div className="text-center mt-2">
+            <a
+              href={user.html_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline"
+            >
+              View GitHub Profile
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Search;
